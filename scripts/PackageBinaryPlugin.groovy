@@ -31,7 +31,9 @@ target(packageBinaryPlugin: 'Replacement for package-plugin') {
 	File gspFolder = new File(conf.gspFolder ?: "$basedir/grails-app/views")
 
 	boolean compileGsp = conf.compileGsp instanceof Boolean ? conf.compileGsp : true
-	if (conf.compileGsp) {
+	compileGsp &= gspFolder.exists()
+
+	if (compileGsp) {
 		compileGsps conf, gspProperties, gspFolder
 	}
 
@@ -150,7 +152,7 @@ void buildZip(String jarName, boolean compileGsp, File gspProperties, File gspFo
 			}
 			zipfileset dir: tempEmptyGspFolder.path, prefix: 'grails-app/views'
 		}
-		else {
+		else if (gspFolder.exists()) {
 			zipfileset dir: gspFolder.path, prefix: 'grails-app/views'
 		}
 	}
