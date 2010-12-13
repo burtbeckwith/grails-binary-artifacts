@@ -6,6 +6,7 @@ import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.CodecArtefactHandler
 import org.codehaus.groovy.grails.commons.ControllerArtefactHandler
 import org.codehaus.groovy.grails.commons.DomainClassArtefactHandler
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
 import org.codehaus.groovy.grails.commons.TagLibArtefactHandler
 import org.codehaus.groovy.grails.plugins.web.filters.FiltersConfigArtefactHandler
@@ -259,9 +260,10 @@ class ClassRegistry {
 	 * Called by plugin descriptor at startup
 	 * @param application the application
 	 */
-	static void registerCodecClasses(application) {
+	static void registerCodecClasses(GrailsApplication application) {
 
-		application.registerArtefactHandler new BinaryAwareCodecArtefactHandler()
+		CodecArtefactHandler handler = application.getArtefactHandler(CodecArtefactHandler.TYPE)
+		application.registerArtefactHandler BinaryAwareCodecArtefactHandler.proxy(handler)
 
 		for (name in codecClassNames) {
 			addArtefact application, CodecArtefactHandler.TYPE, name
@@ -272,9 +274,10 @@ class ClassRegistry {
 	 * Called by plugin descriptor at startup
 	 * @param application the application
 	 */
-	static void registerControllerClasses(application) {
+	static void registerControllerClasses(GrailsApplication application) {
 
-		application.registerArtefactHandler new BinaryAwareControllerArtefactHandler()
+		ControllerArtefactHandler handler = application.getArtefactHandler(ControllerArtefactHandler.TYPE)
+		application.registerArtefactHandler BinaryAwareControllerArtefactHandler.proxy(handler)
 
 		for (name in controllerClassNames) {
 			addArtefact application, ControllerArtefactHandler.TYPE, name
@@ -285,9 +288,10 @@ class ClassRegistry {
 	 * Called by plugin descriptor at startup
 	 * @param application the application
 	 */
-	static void registerDomainClasses(application) {
+	static void registerDomainClasses(GrailsApplication application) {
 
-		application.registerArtefactHandler new BinaryAwareDomainClassArtefactHandler()
+		DomainClassArtefactHandler handler = application.getArtefactHandler(DomainClassArtefactHandler.TYPE)
+		application.registerArtefactHandler BinaryAwareDomainClassArtefactHandler.proxy(handler)
 
 		for (name in domainClassNames) {
 			addArtefact application, DomainClassArtefactHandler.TYPE, name
@@ -298,9 +302,10 @@ class ClassRegistry {
 	 * Called by plugin descriptor at startup
 	 * @param application the application
 	 */
-	static void registerFilterClasses(application) {
+	static void registerFilterClasses(GrailsApplication application) {
 
-		application.registerArtefactHandler new BinaryAwareFilterArtefactHandler()
+		FiltersConfigArtefactHandler handler = application.getArtefactHandler(FiltersConfigArtefactHandler.TYPE)
+		application.registerArtefactHandler BinaryAwareFilterArtefactHandler.proxy(handler)
 
 		for (name in filterClassNames) {
 			addArtefact application, FiltersConfigArtefactHandler.TYPE, name
@@ -311,9 +316,10 @@ class ClassRegistry {
 	 * Called by plugin descriptor at startup
 	 * @param application the application
 	 */
-	static void registerServices(application) {
+	static void registerServices(GrailsApplication application) {
 
-		application.registerArtefactHandler new BinaryAwareServiceArtefactHandler()
+		ServiceArtefactHandler handler = application.getArtefactHandler(ServiceArtefactHandler.TYPE)
+		application.registerArtefactHandler BinaryAwareServiceArtefactHandler.proxy(handler)
 
 		for (String name in serviceClassNames.keySet()) {
 			addArtefact application, ServiceArtefactHandler.TYPE, name
@@ -324,9 +330,10 @@ class ClassRegistry {
 	 * Called by plugin descriptor at startup
 	 * @param application the application
 	 */
-	static void registerTaglibs(application) {
+	static void registerTaglibs(GrailsApplication application) {
 
-		application.registerArtefactHandler new BinaryAwareTaglibArtefactHandler()
+		TagLibArtefactHandler handler = application.getArtefactHandler(TagLibArtefactHandler.TYPE)
+		application.registerArtefactHandler BinaryAwareTaglibArtefactHandler.proxy(handler)
 
 		for (String name in taglibClassNames) {
 			addArtefact application, TagLibArtefactHandler.TYPE, name
@@ -337,7 +344,7 @@ class ClassRegistry {
 	 * Called by plugin descriptor at startup.
 	 * @param application the application
 	 */
-	static void registerPrecompiledGsps(ctx, application) {
+	static void registerPrecompiledGsps(ctx, GrailsApplication application) {
 		def precompiledGspMap = ctx.groovyPagesTemplateEngine.precompiledGspMap
 		if (precompiledGspMap == null) {
 			return
@@ -364,7 +371,7 @@ class ClassRegistry {
 		LOG.debug "precompiledGspMap is now $precompiledGspMap"
 	}
 
-	static void addArtefact(application, String type, String className) {
+	static void addArtefact(GrailsApplication application, String type, String className) {
 		try {
 			LOG.debug "Adding $type artifact $className"
 
