@@ -4,7 +4,7 @@ import org.springframework.util.FileCopyUtils
 
 eventPackagePluginStart = {
 
-	if (grailsAppName != 'binary-artifacts') {
+	if (grailsAppName != 'grails-binary-artifacts') {
 		// only do this for this plugin, not when installed in another
 		return
 	}
