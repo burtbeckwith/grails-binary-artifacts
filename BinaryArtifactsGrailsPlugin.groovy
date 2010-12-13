@@ -93,7 +93,7 @@ class BinaryArtifactsGrailsPlugin {
 	private void callDoWithWebDescriptor(xml, del) {
 		for (stub in stubs) {
 			try {
-				if (stub?.doWithWebDescriptor) {
+				if (stub.metaClass.hasProperty(stub, 'doWithWebDescriptor')) {
 					stub.doWithWebDescriptor.delegate = del
 					stub.doWithWebDescriptor xml
 				}
@@ -108,7 +108,7 @@ class BinaryArtifactsGrailsPlugin {
 	private void callDoWithSpring(del) {
 		for (stub in stubs) {
 			try {
-				if (stub?.doWithSpring) {
+				if (stub.metaClass.hasProperty(stub, 'doWithSpring')) {
 					stub.doWithSpring.delegate = del
 					stub.doWithSpring()
 				}
@@ -123,7 +123,7 @@ class BinaryArtifactsGrailsPlugin {
 	private void callDoWithDynamicMethods(ctx, del) {
 		for (stub in stubs) {
 			try {
-				if (stub?.doWithDynamicMethods) {
+				if (stub.metaClass.hasProperty(stub, 'doWithDynamicMethods')) {
 					stub.doWithDynamicMethods.delegate = del
 					stub.doWithDynamicMethods ctx
 				}
@@ -138,7 +138,7 @@ class BinaryArtifactsGrailsPlugin {
 	private void callDoWithApplicationContext(ctx, del) {
 		for (stub in stubs) {
 			try {
-				if (stub?.doWithApplicationContext) {
+				if (stub.metaClass.hasProperty(stub, 'doWithApplicationContext')) {
 					stub.doWithApplicationContext.delegate = del
 					stub.doWithApplicationContext ctx
 				}
@@ -153,7 +153,7 @@ class BinaryArtifactsGrailsPlugin {
 	private void callOnConfigChange(event, del) {
 		for (stub in stubs) {
 			try {
-				if (stub?.onConfigChange) {
+				if (stub.metaClass.hasProperty(stub, 'onConfigChange')) {
 					stub.onConfigChange.delegate = del
 					stub.onConfigChange event
 				}
