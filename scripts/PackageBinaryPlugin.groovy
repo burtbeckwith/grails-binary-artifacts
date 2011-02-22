@@ -1,4 +1,5 @@
 import grails.util.GrailsNameUtils
+import grails.util.PluginBuildSettings
 
 import org.codehaus.groovy.grails.plugins.GrailsPluginUtils
 import org.codehaus.groovy.grails.web.pages.GroovyPageCompilerTask
@@ -48,9 +49,18 @@ void configureAst() {
 	rootLoader.addURL new File(binaryArtifactsPluginDir, 'binaryartifacts-ast.jar').toURI().toURL()
 
 	// configure the override build settings so GlobalPluginAwareEntityASTTransformation can do its thing
-	def BinaryAwarePluginBuildSettings = classLoader.loadClass(
-		'com.burtbeckwith.binaryartifacts.BinaryAwarePluginBuildSettings')
-	pluginSettings = BinaryAwarePluginBuildSettings.newInstance(grailsSettings, null, basedir)
+	def realGetPluginInfoForSource = PluginBuildSettings.metaClass.getMetaMethod(
+		'getPluginInfoForSource', [String] as Class[])
+	def ClassRegistry = classLoader.loadClass('com.burtbeckwith.binaryartifacts.ClassRegistry')
+	PluginBuildSettings.metaClass.getPluginInfoForSource = { String sourceFile ->
+		if (ClassRegistry.isRegistered(sourceFile)) {
+			return delegate.getPluginInfo(basedir)
+		}
+
+		realGetPluginInfoForSource.invoke sourceFile
+	}
+
+	pluginSettings = new PluginBuildSettings(grailsSettings)
 	GrailsPluginUtils.pluginBuildSettings = pluginSettings
 }
 

@@ -8,7 +8,7 @@ import org.codehaus.groovy.grails.plugins.web.filters.FiltersGrailsPlugin
 
 class BinaryArtifactsGrailsPlugin {
 
-	String version = '1.0'
+	String version = '1.0.1'
 	String grailsVersion = '1.3.3 > *'
 	String author = 'Burt Beckwith'
 	String authorEmail = 'burt@burtbeckwith.com'
@@ -40,7 +40,6 @@ class BinaryArtifactsGrailsPlugin {
 	}
 
 	def doWithSpring = {
-
 		if (application.warDeployed) {
 			ClassRegistry.loadFromProperties application.classLoader
 			createStubs application
